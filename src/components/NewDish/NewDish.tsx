@@ -1,15 +1,17 @@
 import {useState} from "react";
-import {Dish} from "../../types";
+import {DishList} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {orderfetchData} from "../../store/orderThunks";
+import {orderFetchData} from "../../store/orderThunks";
 import {isLoading} from "../../store/orderSlice";
 import {useNavigate} from "react-router-dom";
+import Spinner from "../Spinner/Spinner";
 
 const NewDish = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const loading = useAppSelector(isLoading);
-  const [dish, setDish] = useState<Dish>({
+  const [dish, setDish] = useState<DishList>({
+    id: Math.random().toString(),
     title: '',
     price: '',
     image: '',
@@ -25,13 +27,14 @@ const NewDish = () => {
   const onFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    dispatch(orderfetchData(dish));
+    dispatch(orderFetchData(dish));
     setDish({
+      id: Math.random().toString(),
       title: '',
       price: '',
       image: '',
     })
-    navigate('/admin/orders')
+    navigate('/admin/orders');
   };
 
   return (
@@ -77,9 +80,9 @@ const NewDish = () => {
         />
       </div>
       <button type="submit" className="btn btn-primary mt-2" disabled={loading}>
-        {loading ? 'Loading...' : 'Create'}
+        {loading ? <Spinner/> : 'Create'}
       </button>
-      {loading && <p>Loading...</p>}
+      {loading && <p><Spinner/></p>}
     </form>
   );
 };
