@@ -1,15 +1,15 @@
 import {useState} from "react";
 import {DishList} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {orderFetchData} from "../../store/orderThunks";
-import {isLoading} from "../../store/orderSlice";
+import {orderPostData} from "../../store/orderThunks";
+import {postLoading} from "../../store/orderSlice";
 import {useNavigate} from "react-router-dom";
 import Spinner from "../Spinner/Spinner";
 
 const NewDish = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const loading = useAppSelector(isLoading);
+  const loading = useAppSelector(postLoading);
   const [dish, setDish] = useState<DishList>({
     id: Math.random().toString(),
     title: '',
@@ -27,14 +27,14 @@ const NewDish = () => {
   const onFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    dispatch(orderFetchData(dish));
+    dispatch(orderPostData(dish));
     setDish({
       id: Math.random().toString(),
       title: '',
       price: '',
       image: '',
     })
-    navigate('/admin/orders');
+    navigate('/admin/dishes');
   };
 
   return (

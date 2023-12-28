@@ -10,6 +10,9 @@ function App() {
       <Routes>
         <Route path="/" element={<UserForm/>} />
         <Route path="/admin/*" element={<Admin/>} />
+        {/*<Route path="/dishes" element={<Dishes/>} />*/}
+        {/*<Route path="/orders/*" element={<Orders/>} />*/}
+        {/*<Route path="/orders/new-dish" element={<NewDish/>}/>*/}
         <Route path="*" element={(<ErrorPage/>)}/>
       </Routes>
     </>

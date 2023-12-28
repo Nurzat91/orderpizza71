@@ -2,20 +2,15 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import axiosApi from "../axiosApi";
 import {DishesList, DishList} from "../types";
 
-export const orderFetchData = createAsyncThunk(
-  'order/fetchData',
-  async (data: DishList, thunkAPI) => {
-    try {
-      const response = await axiosApi.post('order.json', data);
-      return response.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+export const orderPostData = createAsyncThunk<void, DishList>(
+  'order/postData',
+  async (data) => {
+    await axiosApi.post('order.json', data);
   }
 );
 
 export const fetchGetData = createAsyncThunk(
-  'order/fetchDataAll',
+  'order/fetchData',
   async () => {
     const dishesResponse = await axiosApi.get<DishesList | null>('/order.json');
     const dishes = dishesResponse.data;
@@ -33,5 +28,12 @@ export const fetchGetData = createAsyncThunk(
     }
 
     return newDishes;
+  }
+);
+
+export const deleteDish = createAsyncThunk<void, string>(
+  'order/delete',
+  async (dishId) => {
+    await axiosApi.delete(`/order/${dishId}.json`);
   }
 );
