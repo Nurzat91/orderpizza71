@@ -18,6 +18,7 @@ const Admin = () => {
           <Route path="/dishes" element={<Dishes/>} />
           <Route path="/orders" element={<Orders/>} />
           <Route path="/dishes/new-dish" element={<NewDish/>}/>
+          <Route path="/dishes/new-dish/:id" element={<NewDish/>}/>
         </Routes>
       </div>
     </>

@@ -1,21 +1,28 @@
-import {useState} from "react";
-import {DishList} from "../../types";
+import React, {useState} from "react";
+import {ApiEditDish} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {orderPostData} from "../../store/orderThunks";
 import {postLoading} from "../../store/orderSlice";
 import {useNavigate} from "react-router-dom";
 import Spinner from "../Spinner/Spinner";
 
-const NewDish = () => {
+const initialState: ApiEditDish = {
+  title: '',
+  price: '',
+  image: '',
+};
+
+interface Props {
+  existingDish?: ApiEditDish;
+  isEdit?: boolean;
+  isLoading?: boolean;
+}
+
+const NewDish: React.FC<Props> = ({existingDish = initialState, isEdit = false, isLoading = false}) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const loading = useAppSelector(postLoading);
-  const [dish, setDish] = useState<DishList>({
-    id: Math.random().toString(),
-    title: '',
-    price: '',
-    image: '',
-  });
+  const [dish, setDish] = useState<ApiEditDish>(existingDish);
 
   const changeDish = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDish((prev) => ({
@@ -26,10 +33,11 @@ const NewDish = () => {
 
   const onFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading) return;
+
 
     dispatch(orderPostData(dish));
     setDish({
-      id: Math.random().toString(),
       title: '',
       price: '',
       image: '',
@@ -39,7 +47,7 @@ const NewDish = () => {
 
   return (
     <form onSubmit={onFormSubmit}>
-      <h4>Add new dish</h4>
+      <h4>{isEdit ? 'Edit dish' : 'Add new dish'}</h4>
       <div className="form-group">
         <label htmlFor="title">Title</label>
         <input
@@ -79,8 +87,9 @@ const NewDish = () => {
           onChange={changeDish}
         />
       </div>
-      <button type="submit" className="btn btn-primary mt-2" disabled={loading}>
-        {loading ? <Spinner/> : 'Create'}
+      <button type="submit" className="btn btn-primary mt-2" disabled={isLoading}>
+        {isLoading && <Spinner/>}
+        {isEdit ? 'Update' : 'Create'}
       </button>
       {loading && <p><Spinner/></p>}
     </form>

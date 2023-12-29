@@ -6,6 +6,8 @@ export interface DishList{
   image: string;
 }
 
+export type ApiEditDish = Omit<DishList, 'id'>;
+
 export interface DishesList {
   [id: string]: Dish;
 }

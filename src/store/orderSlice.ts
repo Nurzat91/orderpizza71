@@ -1,20 +1,26 @@
-import {DishList} from "../types";
-import {createSlice} from "@reduxjs/toolkit";
-import {deleteDish, fetchGetData, orderPostData} from "./orderThunks";
+import {ApiEditDish, DishList} from "../types";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {deleteDish, fetchEditDish, fetchGetData, orderPostData, updateDishEdit} from "./orderThunks";
 import {RootState} from "../app/store";
 
 interface OrderState {
+  dishId: ApiEditDish | null;
   orderPizza: DishList[];
   postLoading: boolean;
   fetchLoading: boolean;
   deleteLoading: false | string;
+  editIdLoading: boolean;
+  updateEditIdLoading: boolean;
 }
 
 const initialState: OrderState = {
+  dishId: null,
   orderPizza: [],
   postLoading: false,
   fetchLoading: false,
   deleteLoading: false,
+  editIdLoading: false,
+  updateEditIdLoading: false,
 }
 
 export const orderSlice = createSlice({
@@ -53,13 +59,37 @@ export const orderSlice = createSlice({
       state.deleteLoading = false;
       state.fetchLoading = false;
     });
+
+    builder.addCase(fetchEditDish.pending, (state) => {
+      state.editIdLoading = true;
+    });
+    builder.addCase(fetchEditDish.fulfilled, (state, {payload: data}: PayloadAction<ApiEditDish>) => {
+      state.editIdLoading = false;
+      state.dishId = data;
+    });
+    builder.addCase(fetchEditDish.rejected, (state) => {
+      state.editIdLoading = false;
+    });
+
+    builder.addCase(updateDishEdit.pending, (state) => {
+      state.updateEditIdLoading = true;
+    });
+    builder.addCase(updateDishEdit.fulfilled, (state) => {
+      state.updateEditIdLoading = false;
+    });
+    builder.addCase(updateDishEdit.rejected, (state) => {
+      state.updateEditIdLoading = false;
+    });
   },
 });
 
 export const orderReducer = orderSlice.reducer;
 export const orderDishes = (state: RootState) => state.order.orderPizza;
+export const selectDishId = (state: RootState) => state.order.dishId;
 
 export const postLoading = (state: RootState) => state.order.postLoading;
 export const isLoading = (state: RootState) => state.order.fetchLoading;
 
 export const deleteLoading = (state: RootState) => state.order.deleteLoading;
+export const selectFetchEditIdLoading = (state: RootState) => state.order.editIdLoading;
+export const selectUpdateEditIdLoading = (state: RootState) => state.order.updateEditIdLoading;

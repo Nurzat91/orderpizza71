@@ -33,10 +33,7 @@ const Dishes = () => {
             <img src={data.image} alt="Photo" style={{width: "120px"}}/>
             <div className="w-50 ms-5 text-capitalize fs-5">{data.title}</div>
             <div className="w-25 fs-5 fw-semibold">{data.price} KGS</div>
-            <button
-              type="button"
-              className="btn btn-light"
-            >Edit</button>
+            <Link to={'/dishes/new-dish/' + data.id} className="btn btn-light">Edit</Link>
             <button
               type="button"
               className="btn btn-light mx-4"
